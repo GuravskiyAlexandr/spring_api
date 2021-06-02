@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/").authenticated()// доступность всем
-                .antMatchers("/")
+                .antMatchers("/user")
                 .access("hasAnyRole('ROLE_USER')")
                 .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 .and()
@@ -42,7 +42,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/login")
                 //указываем логику обработки при логине
                 .successHandler(successUserHandler)// подключаем наш SuccessHandler для перенеправления по ролям
-        ;
+                .and()
+                .csrf().disable();
         http
                 .logout()
                 .permitAll()

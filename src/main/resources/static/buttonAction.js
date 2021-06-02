@@ -1,4 +1,3 @@
-
 function showListUsers() {
     const tabListUsers = document.getElementById("v-pills-home");
     const tabUser = document.getElementById("v-pills-profile");
@@ -17,13 +16,15 @@ function showUser() {
 
 }
 
-async function checkParamForm(path, method, userId, buttonSubmit) {
+async function setParamForm(path, method, userId, buttonSubmit) {
 
     let user;
     if (userId !== null) {
         let response = await fetch("admin/user/" + userId);
         if (response.ok) {
             user = await response.json();
+            console.log('ok');
+            console.log(user)
         }
     }
     const form = document.getElementById('formUserM');
@@ -41,13 +42,7 @@ async function checkParamForm(path, method, userId, buttonSubmit) {
         age.setAttribute('value', user.age);
         email.setAttribute('value', user.email);
         document.getElementById('buttonSubmitM').innerText = buttonSubmit;
-        document.getElementById('exampleModalLabel').innerText = buttonSubmit +' User';
+        document.getElementById('exampleModalLabel').innerText = buttonSubmit + ' User';
 
-    }
-    let elems = document.querySelectorAll('#formUserM div input');
-    if (path.includes('delete')) {
-        elems.forEach(value => value.setAttribute('readonly', 'readonly'));
-    }else {
-        elems.forEach(value => value.removeAttribute('readonly'));
     }
 }

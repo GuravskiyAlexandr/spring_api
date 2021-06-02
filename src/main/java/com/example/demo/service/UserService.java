@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.repository.RoleRepo;
 import com.example.demo.repository.UserRepo;
@@ -9,7 +10,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -38,10 +41,10 @@ public class UserService implements UserDetailsService {
         return userRepo.findAll();
     }
 
-    public void saveUser(User user) {
-        user.setRoles(roleRepo.findRolesByRoleIn(user.getUserRolesTransient()));
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepo.save(user);
+    public User saveUser(User user) {
+        user.setRoles(roleRepo.findRolesByRoleIn(user.getRoles()
+                .stream().map(Role::getRole).collect(Collectors.toList())));
+       return userRepo.save(user);
     }
 
     public User findUserById(Long id) {
@@ -49,13 +52,14 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public void userEdit(User user) {
-        user.setRoles(roleRepo.findRolesByRoleIn(user.getUserRolesTransient()));
+    public User userEdit(User user) {
+        user.setRoles(roleRepo.findRolesByRoleIn(user.getRoles()
+                .stream().map(Role::getRole).collect(Collectors.toList())));
         user.setPassword(passwordEncoder.encode(user.getPasswordNew()));
-        userRepo.save(user);
+       return userRepo.save(user);
     }
 
     public void userDelete(User user) {
-        userRepo.delete(user);
+      userRepo.delete(user);
     }
 }
