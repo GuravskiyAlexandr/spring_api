@@ -42,7 +42,7 @@ public class AdminController {
     }
 
     @JsonView(Views.Name.class)
-    @PostMapping(value = "/admin/edit")
+    @PutMapping(value = "/admin/edit")
     public User editUser(@RequestBody User newUser) {
         System.out.println(newUser);
         return userService.userEdit(newUser);
@@ -55,8 +55,9 @@ public class AdminController {
         return userService.findUserById(id);
     }
 
-    @DeleteMapping(value = "/admin/delete")
-    public boolean delete(@RequestBody User user) {
+    @DeleteMapping(value = "/admin/delete/{id}")
+    public boolean delete(@PathVariable("id") User user) {
+        System.out.println(user);
           userService.userDelete(user);
           return true;
     }

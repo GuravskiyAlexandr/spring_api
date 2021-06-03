@@ -85,7 +85,7 @@ function setTableUser(date) {
         addCell(row, user.age);
         addCell(row, user.email);
         addCell(row, getRoles(user.roles));
-        setButton(row, user.id, "Edit", "btn-primary", "/admin/edit", "POST");
+        setButton(row, user.id, "Edit", "btn-primary", "/admin/edit", "PUT");
         setButton(row, user.id, "Delete", "btn-danger", "/admin/delete", "DELETE");
     });
 }

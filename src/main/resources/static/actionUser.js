@@ -14,12 +14,15 @@ async function sendForm(idForm) {
 
     }
 
-    const path = form.getAttribute('action');
+    let path = form.getAttribute('action');
     const method = form.getAttribute('method');
 
     const headers = new Headers({
         'Content-Type': 'application/json',
     });
+    if (method === 'DELETE'){
+        path +='/'+user.id;
+    }
     let userNew;
     try {
         const response = await fetch(path, {
@@ -30,7 +33,7 @@ async function sendForm(idForm) {
         });
         console.log('Ok :');
         userNew = await response.json();
-        if (method === 'POST') {
+        if (method !== 'DELETE') {
             await userSetTable(user, userNew, form)
         } else {
             if (userNew)
@@ -40,7 +43,6 @@ async function sendForm(idForm) {
     } catch (error) {
         console.error('error :', error);
     }
-
 }
 
 async function userSetTable(user, userNew, form) {
