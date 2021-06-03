@@ -13,7 +13,7 @@ public class MainController {
     }
 
     @GetMapping(value = "/")
-    public String allUsers() {
+    public String getIndex() {
         return "index";
     }
 }

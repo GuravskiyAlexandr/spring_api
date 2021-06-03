@@ -20,11 +20,10 @@ async function setParamForm(path, method, userId, buttonSubmit) {
 
     let user;
     if (userId !== null) {
-        let response = await fetch("admin/user/" + userId);
+        let response = await fetch("admin/" + userId);
         if (response.ok) {
             user = await response.json();
             console.log('ok');
-            console.log(user)
         }
     }
     const form = document.getElementById('formUserM');

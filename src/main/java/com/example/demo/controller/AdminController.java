@@ -4,6 +4,8 @@ import com.example.demo.entity.User;
 import com.example.demo.entity.Views;
 import com.example.demo.service.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +13,7 @@ import java.util.List;
 
 
 @RestController
+@RequestMapping("/admin")
 public class AdminController {
     private final UserService userService;
 
@@ -20,45 +23,37 @@ public class AdminController {
 
 
     @JsonView(Views.Name.class)
-    @GetMapping(value = "/user")
-    public User getUser(@AuthenticationPrincipal User user) {
-        if (user != null) {
-            user = userService.findUserById(user.getId());
-            return user;
-        }
-        return null;
+    @GetMapping(value = "/users")
+    public ResponseEntity<List<User>> allUsers() {
+        return ResponseEntity.ok()
+                .body(userService.getAllUsers());
     }
 
     @JsonView(Views.Name.class)
-    @GetMapping(value = "/admin/users")
-    public List<User> allUsers() {
-        return userService.getAllUsers();
+    @PostMapping
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(userService.saveUser(user));
     }
 
     @JsonView(Views.Name.class)
-    @PostMapping("/admin/userAdd")
-    public User registerUser(@RequestBody User user) {
-        return userService.saveUser(user);
+    @PutMapping
+    public ResponseEntity<User> editUser(@RequestBody User newUser) {
+        return ResponseEntity.ok()
+                .body(userService.saveUser(userService.userEdit(newUser)));
     }
 
     @JsonView(Views.Name.class)
-    @PutMapping(value = "/admin/edit")
-    public User editUser(@RequestBody User newUser) {
-        System.out.println(newUser);
-        return userService.userEdit(newUser);
-    }
-
-    @JsonView(Views.Name.class)
-    @GetMapping(value = "/admin/user/{id}")
+    @GetMapping(value = "/{id}")
     @ResponseBody
-    public User findUserForEdit(@PathVariable("id") Long id) {
-        return userService.findUserById(id);
+    public ResponseEntity<User> findUserForEdit(@PathVariable("id") Long id) {
+        return ResponseEntity.ok()
+                .body(userService.saveUser(userService.findUserById(id)));
     }
 
-    @DeleteMapping(value = "/admin/delete/{id}")
-    public boolean delete(@PathVariable("id") User user) {
-        System.out.println(user);
-          userService.userDelete(user);
-          return true;
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<User> delete(@PathVariable("id") User user) {
+        userService.userDelete(user);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

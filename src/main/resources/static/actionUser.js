@@ -31,7 +31,8 @@ async function sendForm(idForm) {
             credentials: 'include',
             body: JSON.stringify(user)
         });
-        console.log('Ok :');
+
+        console.log(response.status);
         userNew = await response.json();
         if (method !== 'DELETE') {
             await userSetTable(user, userNew, form)
